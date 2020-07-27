@@ -83,7 +83,16 @@ public class ClusterAnalyzer<K>
         }
         return wordList;
     }
-
+   
+   /**
+ * 建立词袋向量
+ * id=id(word) 为get每个文档wordlist中词对应的id
+ * vector.get(id) 为获取向量中此单词id对应的值（即词频）
+ * 若此wordlist对应的词袋向量vector中此单词id对应的值为空，则词频f+1（相当于构建的词袋向量vector的初始值均为null）
+ * 若词袋向量中此单词对应的值不为空（意味此单词第二次或多次出现在此wordlist种），则在之前的词频f基础上+1
+ * 若想根据p293变更为布尔词频，则只需将else中改为vestor.put(id, 1)即可：即使单词出现多次也只算1次
+ * @author hankcs
+ */
     protected SparseVector toVector(List<String> wordList)
     {
         SparseVector vector = new SparseVector();
@@ -91,7 +100,7 @@ public class ClusterAnalyzer<K>
         {
             int id = id(word);
             Double f = vector.get(id);
-            if (f == null)
+            if (f == null)   
             {
                 f = 1.;
                 vector.put(id, f);
